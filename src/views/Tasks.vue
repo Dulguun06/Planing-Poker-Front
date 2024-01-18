@@ -1,22 +1,20 @@
 <template>
   <div class="container">
     <header class="row">
-      <span class="col-1"/>
-      <h1 class="col text-center"> Task List</h1>
-      <div class="col-1">
-        <button class="btn btn-dark" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">Add Task
-        </button>
-      </div>
-
+      <h1 class="col"> Task List</h1>
     </header>
 
     <table class="table table-dark table-striped table-bordered">
       <thead>
       <tr>
         <th>Title</th>
-        <th>Due-Date</th>
-        <th>Estimation</th>
-        <th></th>
+        <th class="col-2">Due-Date</th>
+        <th class="col-1">Estimation</th>
+        <th class="text-center col-1">
+          <button class="btn btn-dark" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
+            <i class="bi bi-plus-square"></i>
+          </button>
+        </th>
       </tr>
       </thead>
 
@@ -25,8 +23,9 @@
         <th> {{ task.title }}</th>
         <th> {{ task.due }}</th>
         <th class="text-center"> {{ task.estimation }}</th>
-        <th class="taskShowBtn" data-bs-target="#taskModal" data-bs-toggle="modal" @click="getTask(task.id)">
-          Show
+        <th class="taskShowBtn text-center" data-bs-target="#taskModal" data-bs-toggle="modal"
+            @click="getTask(task.id)">
+          <i class="bi bi-info-circle " style="font-size: 1rem;"></i>
         </th>
       </tr>
       </tbody>
@@ -63,7 +62,8 @@
           <form id="newTask" class="row g-3">
             <div class="col-md-6">
               <label class="form-label" for="title">Title</label>
-              <input id="title" v-model="formData.title" class="form-control" placeholder="Title of your task" type="text">
+              <input id="title" v-model="formData.title" class="form-control" placeholder="Title of your task"
+                     type="text">
             </div>
             <div class="col-md-6">
               <label class="form-label" for="date">Due date</label>
@@ -72,7 +72,8 @@
 
             <div class="col-12">
               <label class="form-label" for="description">Description</label>
-              <input id="description" v-model="formData.description" class="form-control" placeholder="Describe your task"
+              <input id="description" v-model="formData.description" class="form-control"
+                     placeholder="Describe your task"
                      type="text">
             </div>
           </form>
@@ -99,10 +100,10 @@ export default {
       formData: {
         title: '',
         description: '',
-        username:'john_doe',
+        username: 'john_doe',
         due: '',
-        estimation:null,
-        room_id:null
+        estimation: null,
+        room_id: null
       },
     }
   },

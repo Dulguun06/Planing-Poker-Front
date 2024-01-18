@@ -1,9 +1,7 @@
 <template>
   <Navbar/>
   <RouterView/>
-
 </template>
-
 
 <script>
 import Tasks from "@/views/Tasks.vue";
@@ -29,12 +27,6 @@ export default {
 
 body {
   background-color: #fca311 !important;
-}
-
-.container {
-  height: auto;
-  padding: 30px;
-  width: 100%;
 }
 
 </style>
