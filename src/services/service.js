@@ -1,29 +1,43 @@
-
 import axios from 'axios';
 
 const TASK_API_BASE_URL = 'http://localhost:8080/api/task';
 const ROOM_API_BASE_URL = 'http://localhost:8080/api/room';
-class Service{
 
-    async getTasks(){
+class Service {
+
+    async getTasks() {
         return axios.get(TASK_API_BASE_URL);
     }
 
     async getTask(tabReqId) {
         return axios.get(`${TASK_API_BASE_URL}/${tabReqId}`);
     }
-    async addTask( model) {
+
+    async addTask(model) {
         await axios.post(`${TASK_API_BASE_URL}`, model)
     }
 
-    async getRooms(){
+    async getRooms() {
         return axios.get(ROOM_API_BASE_URL);
     }
 
     async getRoom(tabReqId) {
         return axios.get(`${ROOM_API_BASE_URL}/${tabReqId}`);
     }
-    async addRoom( model) {
+
+    async checkPass(id, password) {
+        try {
+            return await axios.post(`${ROOM_API_BASE_URL}/check-pass`, {
+                roomId: id,
+                password: password,
+            });
+        } catch (error) {
+            console.error('Error checking password:', error);
+            throw error;
+        }
+    }
+
+    async addRoom(model) {
         await axios.post(`${ROOM_API_BASE_URL}`, model)
     }
 }

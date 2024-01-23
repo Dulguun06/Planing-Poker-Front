@@ -84,16 +84,17 @@
           <h5 class="modal-title"> Joining {{ joiningRoom.name }}</h5>
         </div>
         <div class="modal-body">
-          <!--Add room Form-->
+          <!--Join Room Form-->
           <form id="newRoom" class="row g-3">
             <div class="col-md-12">
               <label class="form-label" for="joinPassword">Password</label>
-              <input id="joinPassword" v-model="input" class="form-control" type="password">
+              <input id="joinPassword" v-model="joiningRoom.password" class="form-control" type="password">
             </div>
           </form>
         </div>
         <div class="modal-footer">
-          <button class="btn btn-success" data-bs-dismiss="modal" type="button" @click="enterRoom(joiningRoom.id)">
+          <button class="btn btn-success" data-bs-dismiss="modal" type="button"
+                  @click.prevent="enterRoom">
             Join
           </button>
           <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Cancel</button>
@@ -106,15 +107,23 @@
 
 <script>
 import service from "@/services/service.js";
+import router from "@/services/router.js";
 
 export default {
-  name: "Rooms",
+  name: "Home",
   data() {
     return {
       rooms: [],
-      selectedRoom: null,
-      joiningRoom: null,
-      input: null,
+      selectedRoom: {
+        room_name: '',
+        url: '',
+        id: null,
+      },
+      joiningRoom: {
+        room_name: "",
+        password: "",
+        id: null,
+      },
       formData: {
         room_name: '',
         url: '',
@@ -139,7 +148,7 @@ export default {
       })
     },
     async addRoom() {
-      this.formData.url = "http://localhost:5173/room/";
+      this.formData.url = `http://localhost:5173/room/`;
       try {
         await service.addRoom(this.formData);
         this.formData = {
@@ -152,19 +161,18 @@ export default {
         console.error("Error adding room:", error);
       }
     },
-    async enterRoom(id) {
+    async enterRoom() {
       try {
-        const response = await service.getRoom(id);
-        const res = response.data();
-        if (this.joiningRoom.password === res.password){
-          window.location = "http://localhost:5173/room";
+        const response = await service.checkPass(this.joiningRoom.id, this.joiningRoom.password);
+        console.log('Response Data:', response.data);
+        if (response.status === 200) {
+          console.log('Password Correct');
+          await router.push({ name: 'Room', params: { id: this.joiningRoom.id} });
         } else {
-          console.error('Incorrect password');
-          // Handle incorrect password (e.g., show an error message)
+
         }
       } catch (error) {
-        console.error('Error fetching room details:', error);
-        // Handle error (e.g., show an error message)
+        console.error('Error checking password:', error.response.data);
       }
     }
   },
