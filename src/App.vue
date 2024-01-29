@@ -1,6 +1,6 @@
 <template>
   <Navbar/>
-  <RouterView/>
+  <RouterView :key="$route.fullPath"/>
 </template>
 
 <script>

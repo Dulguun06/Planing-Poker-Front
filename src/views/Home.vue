@@ -8,7 +8,9 @@
       <tr>
         <th class="col-1">#</th>
         <th class="col-6">Room Name</th>
-        <th class="col-1 text-center"></th>
+        <th class="col-1 text-center">
+          <button class="btn btn-outline-danger"> -</button>
+        </th>
         <th class="col-1 text-center">
           <button class="btn btn-dark" data-bs-target="#addRoomModal" data-bs-toggle="modal" type="button">
             <i class="bi bi-plus-square"></i>
@@ -24,9 +26,9 @@
             @click="getRoom(room.id)">
           <i class="bi bi-eye"></i>
         </th>
-        <th class="roomShowBtn text-center" data-bs-target="#roomEnterModal" data-bs-toggle="modal"
-            @click="func(room.id)">
-          <i class="bi bi-door-open"></i>
+        <th class="roomShowBtn text-center" data-bs-target="#roomEnterModal" data-bs-toggle="modal">
+          <!--            @click="func(room.id)">-->
+          <router-link :to="{ name: 'room', params: { id: room.id } }"><i class="bi bi-door-open"></i></router-link>
         </th>
       </tr>
       </tbody>
@@ -71,32 +73,6 @@
         </div>
         <div class="modal-footer">
           <button class="btn btn-success" data-bs-dismiss="modal" type="button" @click="this.addRoom()">Add</button>
-          <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="roomEnterModal" class="modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title"> Joining {{ joiningRoom.name }}</h5>
-        </div>
-        <div class="modal-body">
-          <!--Join Room Form-->
-          <form id="newRoom" class="row g-3">
-            <div class="col-md-12">
-              <label class="form-label" for="joinPassword">Password</label>
-              <input id="joinPassword" v-model="joiningRoom.password" class="form-control" type="password">
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-success" data-bs-dismiss="modal" type="button"
-                  @click.prevent="enterRoom">
-            Join
-          </button>
           <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Cancel</button>
         </div>
       </div>
@@ -161,20 +137,6 @@ export default {
         console.error("Error adding room:", error);
       }
     },
-    async enterRoom() {
-      try {
-        const response = await service.checkPass(this.joiningRoom.id, this.joiningRoom.password);
-        console.log('Response Data:', response.data);
-        if (response.status === 200) {
-          console.log('Password Correct');
-          await router.push({ name: 'Room', params: { id: this.joiningRoom.id} });
-        } else {
-
-        }
-      } catch (error) {
-        console.error('Error checking password:', error.response.data);
-      }
-    }
   },
   created() {
     this.getRooms();
