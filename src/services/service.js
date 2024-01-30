@@ -2,6 +2,8 @@ import axios from 'axios';
 
 const TASK_API_BASE_URL = 'http://localhost:8080/api/task';
 const ROOM_API_BASE_URL = 'http://localhost:8080/api/room';
+const USER_API_BASE_URL = 'http://localhost:8080/api/user';
+const VOTE_API_BASE_URL = 'http://localhost:8080/api/vote';
 
 class Service {
 
@@ -14,7 +16,14 @@ class Service {
     }
 
     async addTask(model) {
-        await axios.post(`${TASK_API_BASE_URL}`, model)
+        await axios.post(`${TASK_API_BASE_URL}`, model);
+    }
+
+    async addUser(user) {
+        await axios.post(`${USER_API_BASE_URL}`, user);
+    }
+    async deleteUser(user){
+        await  axios.delete(`${USER_API_BASE_URL}/${user.username}`);
     }
 
     async getRooms() {
@@ -26,7 +35,7 @@ class Service {
     }
 
     async addRoom(model) {
-        await axios.post(`${ROOM_API_BASE_URL}`, model)
+        await axios.post(`${ROOM_API_BASE_URL}`, model);
     }
 
     async checkPass(id, password) {
@@ -41,11 +50,23 @@ class Service {
     }
 
     async getTasksByRoomId(id) {
-        return await axios.get(`${ROOM_API_BASE_URL}/${id}/tasks`)
+        return await axios.get(`${ROOM_API_BASE_URL}/${id}/tasks`);
     }
 
-    async updateRoom(id, roomId ) {
-        return await axios.put(`${TASK_API_BASE_URL}/addToRoom/${id}/${roomId}`)
+    async getAddableTask() {
+        return await axios.get(`${TASK_API_BASE_URL}/noRoom`);
+    }
+
+    async addToRoom(id, roomId) {
+        return await axios.put(`${TASK_API_BASE_URL}/addToRoom/${id}/${roomId}`);
+    }
+
+    async removeFromRoom(id) {
+        return await axios.put(`${TASK_API_BASE_URL}/removeFromRoom/${id}`);
+    }
+
+    async vote(id) {
+        return await axios.put(`${VOTE_API_BASE_URL}/`)
     }
 }
 

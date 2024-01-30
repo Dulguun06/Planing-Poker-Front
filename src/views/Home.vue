@@ -6,43 +6,56 @@
     <table class="table table-dark table-striped table-bordered">
       <thead>
       <tr>
-        <th class="col-1">#</th>
-        <th class="col-6">Room Name</th>
+        <th class="col-1 text-center">#</th>
+        <th class="col-8">Room Name</th>
         <th class="col-1 text-center">
-          <button class="btn btn-outline-danger"> -</button>
+          <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
         </th>
         <th class="col-1 text-center">
-          <button class="btn btn-dark" data-bs-target="#addRoomModal" data-bs-toggle="modal" type="button">
-            <i class="bi bi-plus-square"></i>
+          <button class="btn btn-outline-success" data-bs-target="#addRoomModal" data-bs-toggle="modal" type="button">
+            <i class="bi bi-house-add"></i>
           </button>
         </th>
       </tr>
       </thead>
+
       <tbody>
       <tr v-for="room in rooms" :key="room.id">
-        <th>{{ room.id }}</th>
+        <th class="text-center">{{ room.id }}</th>
         <th> {{ room.room_name }}</th>
-        <th class="roomShowBtn text-center" data-bs-target="#roomDetailModal" data-bs-toggle="modal"
-            @click="getRoom(room.id)">
-          <i class="bi bi-eye"></i>
+        <th class=" text-center" @click="getRoom(room.id)">
+          <button class="roomShowBtn btn btn-outline-warning" data-bs-target="#roomDetailModal" data-bs-toggle="modal">
+            <i class=" bi bi-eye"></i>
+          </button>
+
         </th>
-        <th class="roomShowBtn text-center" data-bs-target="#roomEnterModal" data-bs-toggle="modal">
-          <!--            @click="func(room.id)">-->
-          <router-link :to="{ name: 'room', params: { id: room.id } }"><i class="bi bi-door-open"></i></router-link>
+        <th class="text-center">
+          <button class="btn btn-outline-primary roomShowBtn">
+            <router-link :to="{ name: 'room', params: { id: room.id } }">
+              <i class="bi bi-door-open"/>
+            </router-link>
+          </button>
         </th>
       </tr>
       </tbody>
     </table>
   </div>
 
-  <div id="roomDetailModal" class="modal fade " tabindex="-1">
-    <div class=" modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ selectedRoom ? selectedRoom.room_name : "" }}</h5>
+  <div id="roomDetailModal" class="modal fade" tabindex="-1">
+    <div class="  modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="bg-dark modal-content">
+        <div class="modal-header text-bg-dark">
+          <h5 class="modal-title">Invite people to
+            <span class="text-primary"> {{ selectedRoom ? selectedRoom.room_name : "" }} </span>
+          </h5>
         </div>
-        <div class="modal-body">
-          <p><a href="{{selectedRoom.url}}">{{ selectedRoom ? selectedRoom.url : "" }}</a></p>
+        <div class="modal-body row">
+          <label class="col-7 text-primary align-self-center" type="url">{{
+              selectedRoom ? selectedRoom.url : ""
+            }}</label>
+          <button class="col-5 btn btn-outline-primary" @click="copy(selectedRoom.url)">
+            Copy invitation link
+          </button>
         </div>
         <div class="modal-footer">
           <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Close</button>
@@ -53,7 +66,7 @@
 
   <div id="addRoomModal" class="modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content">
+      <div class="bg-dark text-bg-dark modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create Room</h5>
         </div>
@@ -83,7 +96,6 @@
 
 <script>
 import service from "@/services/service.js";
-import router from "@/services/router.js";
 
 export default {
   name: "Home",
@@ -93,11 +105,6 @@ export default {
       selectedRoom: {
         room_name: '',
         url: '',
-        id: null,
-      },
-      joiningRoom: {
-        room_name: "",
-        password: "",
         id: null,
       },
       formData: {
@@ -118,13 +125,7 @@ export default {
         this.selectedRoom = response.data;
       });
     },
-    func(roomId) {
-      service.getRoom(roomId).then((response) => {
-        this.joiningRoom = response.data;
-      })
-    },
     async addRoom() {
-      this.formData.url = `http://localhost:5173/room/`;
       try {
         await service.addRoom(this.formData);
         this.formData = {
@@ -137,6 +138,10 @@ export default {
         console.error("Error adding room:", error);
       }
     },
+    copy(url) {
+      navigator.clipboard.writeText(url);
+
+    }
   },
   created() {
     this.getRooms();

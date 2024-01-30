@@ -1,17 +1,28 @@
 <template>
   <div class="container my-5">
-    <h2 class="mb-4">What does this site do?</h2>
-    <div class="row">
-      <div class="col-md-4">
-        <p>Introducing AgileEstimate: Your Ultimate Planning Poker Web App</p>
+
+    <h1 class="mb-4">Increase estimates accuracy</h1>
+
+    <div class="row bg-dark text-bg-dark rounded-5 d-flex flex-row">
+      <div class="col-6 align-self-center">
+        <div class="row">
+          <h2>
+            Vote and Estimate Issues in Real-Time
+          </h2>
+        </div>
+        <div class="row">
+          <p>
+            Our crisp and clean interface is not only easy-to-use, but also enables outstanding team engagement for
+            development project estimates.
+          </p>
+        </div>
       </div>
-      <div class="col-md-8">
-        <p>Embark on a seamless journey towards efficient project planning with AgileEstimate, the cutting-edge Planning
-          Poker web app designed to streamline your team's estimation process. Whether you're a seasoned Agile
-          practitioner or just diving into the world of iterative development, our user-friendly and feature-rich
-          platform is here to elevate your planning sessions.</p>
+
+      <div class="col-6 text-end " style="padding: 0 !important;">
+        <img class="rounded-5" height="500s" src="../images/Black-hole.webp"/>
       </div>
     </div>
+
   </div>
 </template>
 
