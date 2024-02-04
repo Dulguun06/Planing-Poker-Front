@@ -1,17 +1,17 @@
 <template>
-  <div class="container">
+  <div class="container mt-5">
     <header class="row">
       <h1 class="col"> Task List</h1>
     </header>
 
-    <table class="table table-dark table-striped table-bordered">
+    <table class="table border-black table-striped table-bordered">
       <thead>
       <tr>
         <th>Title</th>
         <th class="col-2">Due-Date</th>
         <th class="col-1">Estimation</th>
         <th class="text-center col-1">
-          <button class="btn btn-dark" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
+          <button class="btn btn-outline-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
             <i class="bi bi-plus-square"></i>
           </button>
         </th>

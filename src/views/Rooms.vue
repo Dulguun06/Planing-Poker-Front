@@ -3,11 +3,12 @@
     <header class="row">
       <h1 class="col"> Room List</h1>
     </header>
-    <table class="table table-dark table-striped table-bordered">
+    <table class="table border-black table-striped table-bordered">
       <thead>
       <tr>
         <th class="col-1 text-center">#</th>
         <th class="col-8">Room Name</th>
+        <th class="ol-2">Capacity</th>
         <th class="col-1 text-center">
           <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
         </th>
@@ -23,12 +24,15 @@
       <tr v-for="room in rooms" :key="room.id">
         <th class="text-center">{{ room.id }}</th>
         <th> {{ room.room_name }}</th>
+        <th class="text-center">
+          {{ room.joinedUsers }} / {{ room.capacity }}
+        </th>
         <th class=" text-center" @click="getRoom(room.id)">
           <button class="roomShowBtn btn btn-outline-warning" data-bs-target="#roomDetailModal" data-bs-toggle="modal">
             <i class=" bi bi-eye"></i>
           </button>
-
         </th>
+
         <th class="text-center">
           <button class="btn btn-outline-primary roomShowBtn">
             <router-link :to="{ name: 'room', params: { id: room.id } }">
@@ -46,15 +50,15 @@
       <div class="bg-dark modal-content">
         <div class="modal-header text-bg-dark">
           <h5 class="modal-title">Invite people to
-            <span class="text-primary"> {{ selectedRoom ? selectedRoom.room_name : "" }} </span>
+            <em> {{ selectedRoom ? selectedRoom.room_name : "" }}</em>
           </h5>
         </div>
         <div class="modal-body row">
-          <label class="col-7 text-primary align-self-center" type="url">{{
+          <label class="col-10 text-info align-self-center" type="url">{{
               selectedRoom ? selectedRoom.url : ""
             }}</label>
-          <button class="col-5 btn btn-outline-primary" @click="copy(selectedRoom.url)">
-            Copy invitation link
+          <button class="col-2 btn btn-outline-light" @click="copy(selectedRoom.url)">
+            <i class="bi bi-copy"></i>
           </button>
         </div>
         <div class="modal-footer">
@@ -77,6 +81,11 @@
               <label class="form-label" for="name">Room Name</label>
               <input id="name" v-model="formData.room_name" class="form-control" placeholder="Name of your room"
                      type="text">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label" for="capacity">Room Capacity</label>
+              <input id="capacity" v-model="formData.capacity" class="form-control" placeholder="Team members"
+                     type="number">
             </div>
             <div class="col-md-12">
               <label class="form-label" for="password">Password</label>
@@ -106,11 +115,13 @@ export default {
         room_name: '',
         url: '',
         id: null,
+        capacity: '',
       },
       formData: {
         room_name: '',
         url: '',
         password: '',
+        capacity: '',
       },
     }
   },
@@ -132,11 +143,13 @@ export default {
           room_name: '',
           url: '',
           password: '',
+          capacity: '',
         };
         this.getRooms();
       } catch (error) {
         console.error("Error adding room:", error);
       }
+      this.getRooms();
     },
     copy(url) {
       navigator.clipboard.writeText(url);

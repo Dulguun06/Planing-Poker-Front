@@ -4,14 +4,14 @@
 </template>
 
 <script>
-import Tasks from "@/views/Tasks.vue";
 import Navbar from "@/components/Navbar.vue";
+import Home from "@/views/Rooms.vue";
 
 export default {
   name: "Main",
   components: {
     Navbar,
-    Tasks
+    Home
   },
 }
 </script>
@@ -26,7 +26,7 @@ export default {
 }
 
 body {
-  background-color: #fca311 !important;
+  background-color: #f1faee !important;
 }
 
 </style>

@@ -19,7 +19,7 @@
       </div>
 
       <div class="col-6 text-end " style="padding: 0 !important;">
-        <img class="rounded-5" height="500s" src="../images/Black-hole.webp"/>
+        <img alt="..." class="rounded-5" height="500s" src="../images/Black-hole.webp"/>
       </div>
     </div>
 

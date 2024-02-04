@@ -19,28 +19,27 @@
           Join
         </button>
 
-        <button class="btn btn-danger" type="button">
-          <router-link style="text-decoration: none; color: white" to="/">Cancel</router-link>
-        </button>
+        <router-link class="btn btn-danger" style="text-decoration: none; color: white" to="/" type="button">
+          Cancel
+        </router-link>
+
       </div>
     </form>
   </div>
 
   <div v-if="isVisible" class="container mt-3 p-2">
-    <h2>Room {{ room.id }}</h2>
-
     <div class="row justify-content-between mt-2">
-      <div class="col pt-2">
-        <p>Welcome to {{ room.room_name }}</p>
+      <div class="col-8 pt-2">
+        <h3>Welcome to room : {{ room.room_name }}</h3>
       </div>
 
-      <div class="col text-end">
-        <button class="btn btn-danger " @click="removeFromRoom">Remove Task</button>
+      <div class="col-4">
+
       </div>
 
     </div>
 
-    <table class="table table-dark table-striped table-bordered">
+    <table class="table border-dark table-striped table-bordered">
       <thead>
       <tr>
         <th></th>
@@ -49,8 +48,13 @@
         <th class="col-2">Due-Date</th>
         <th class="col-1">Estimation</th>
         <th class="text-center col-1">
-          <button class="btn btn-dark" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
+          <button class="btn btn-outline-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
             <i class="bi bi-plus-square" @click="getAddableTasks"></i>
+          </button>
+        </th>
+        <th class="text-center col-1">
+          <button class="btn btn-outline-danger" @click="removeFromRoom">
+            <i class="bi bi-dash-square"></i>
           </button>
         </th>
       </tr>
@@ -68,8 +72,21 @@
         <th> {{ task.due }}</th>
         <th class="text-center"> {{ task.estimation }}</th>
         <th class="text-center">
-          <button class="btn btn-outline-info" data-bs-target="#voteModal" data-bs-toggle="modal" type="button">
+          <button class="btn btn-info"
+                  data-bs-target="#voteModal"
+                  data-bs-toggle="modal"
+                  type="button"
+                  v-bind:disabled="isVoted "
+                  @click="voteModel.taskId = task.id">
             <i class="bi bi-clipboard-check"/>
+          </button>
+        </th>
+        <th class="text-center">
+          <button class="btn border-dark border-1"
+                  data-bs-target="#taskVoteModal"
+                  data-bs-toggle="modal"
+                  type="button" @click="getVote(task.id)">
+            <i class="bi bi-radioactive"></i>
           </button>
         </th>
       </tr>
@@ -134,93 +151,53 @@
         <div class="modal-body">
           <!--Add Vote Form-->
           <div class="row row-cols-1 row-cols-md-5 g-2">
-            <div class="col">
+            <div v-for="card in cards" :key="card.id" class="col">
               <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
+                <div class="card-body btn btn-outline-light" @click="selectCard(card.id)">
+                  <img alt="." class="card-img-top" src="../../src/images/Mercury.png"/>
                 </div>
               </div>
             </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
-            <div class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light">
-                  <img alt="#" class="card-img-top" src="../images/Mercury.png">
-                </div>
-              </div>
-            </div>
-
           </div>
+
         </div>
 
         <div class=" modal-footer">
-          <button class="btn btn-success" data-bs-dismiss="modal" type="button" @click="vote(id)">Ok
+          <button class="btn btn-success" data-bs-dismiss="modal" type="button" @click="vote()">Ok
           </button>
           <button class="btn btn-warning" data-bs-dismiss="modal" type="button">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="taskVoteModal" class="modal modal-xl" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content bg-dark">
+        <div class="modal-header">
+          <h5 class="modal-title text-white">Votes of Task</h5>
+        </div>
+
+        <div class="modal-body">
+          <!--Add Vote Form-->
+          <table class="table table-striped table-dark text-bg-dark">
+            <thead>
+            <tr>
+              <th>User</th>
+              <th>Estimation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="taskVote in taskVotes" :key="taskVote.id">
+              <th>{{ taskVote.username }}</th>
+              <th>{{ taskVote.estimation }}</th>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class=" modal-footer">
+          <button class="btn btn-success" data-bs-dismiss="modal" type="button">Ok</button>
         </div>
       </div>
     </div>
@@ -229,17 +206,21 @@
 
 <script>
 import service from "@/services/service.js";
+import {isDisabled} from "bootstrap/js/src/util/index.js";
 
 export default {
   name: "Room",
   data() {
     return {
+      isVoted: false,
       tasks: [],
+      taskVotes: [],
+      cards: [],
       addableTasks: [],
-      username: '',
+      votes: '',
       voteModel: {
-        username: this.username,
-        task: '',
+        username: '',
+        taskId: '',
         estimation: ''
       },
       room: {
@@ -257,6 +238,7 @@ export default {
     }
   },
   methods: {
+    isDisabled,
     async getRoom() {
       try {
         const response = await service.getRoom(this.id);
@@ -268,12 +250,12 @@ export default {
     async enterRoom() {
       try {
         const response = await service.checkPass(this.room.id, this.room.password);
-
         if (response.status === 200) {
-          await service.addUser(this.user);
+          await service.addUser(this.id, this.user);
           this.isVisible = true;
           this.formVisible = false;
           this.getTasks();
+          this.voteModel.username = this.user.username;
         }
       } catch (error) {
         console.error("Error: " + error);
@@ -311,16 +293,37 @@ export default {
         console.error('Error removing from room: ', error);
       }
     },
-    vote(id) {
-      service.vote(id);
+    getCards() {
+      service.getCards().then((response) => {
+        this.cards = response.data;
+      })
+    },
+    selectCard(est) {
+      this.voteModel.estimation = est;
+    },
+    vote() {
+      service.vote(this.voteModel);
+      this.isVoted = true;
+    },
+    getVote(taskId) {
+      service.getVote(taskId).then((response) => {
+        this.taskVotes = response.data;
+        this.votes = Object.keys(this.taskVotes).length;
+      });
+    },
+    isVoteFull() {
+      if (this.votes >= this.room.capacity) {
+
+      }
     }
   },
   mounted() {
     this.id = this.$route.params.id;
     this.getRoom();
+    this.getCards();
   },
-  // beforeUnmount() {
-  //   service.deleteUser(this.user);
-  // }
+  unmounted() {
+    service.removeUser(this.id, this.user.username);
+  }
 }
 </script>

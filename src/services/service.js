@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {afterWrite} from "@popperjs/core";
 
 const TASK_API_BASE_URL = 'http://localhost:8080/api/task';
 const ROOM_API_BASE_URL = 'http://localhost:8080/api/room';
@@ -19,11 +20,9 @@ class Service {
         await axios.post(`${TASK_API_BASE_URL}`, model);
     }
 
-    async addUser(user) {
+    async addUser(roomId, user) {
         await axios.post(`${USER_API_BASE_URL}`, user);
-    }
-    async deleteUser(user){
-        await  axios.delete(`${USER_API_BASE_URL}/${user.username}`);
+        await axios.post(`${ROOM_API_BASE_URL}/${roomId}/users/${user.username}`)
     }
 
     async getRooms() {
@@ -65,8 +64,19 @@ class Service {
         return await axios.put(`${TASK_API_BASE_URL}/removeFromRoom/${id}`);
     }
 
-    async vote(id) {
-        return await axios.put(`${VOTE_API_BASE_URL}/`)
+    async vote(model) {
+        console.log(model);
+        return await axios.post(`${VOTE_API_BASE_URL}`, model)
+    }
+    async getVote(taskId){
+        return await axios.get(`${VOTE_API_BASE_URL}/task/${taskId}`)
+    }
+    async getCards(){
+        return await axios.get("http://localhost:8080/api/card")
+    }
+
+    async removeUser(id, username) {
+        return await axios.post(`${ROOM_API_BASE_URL}/${id}/remove-user/${username}`)
     }
 }
 
