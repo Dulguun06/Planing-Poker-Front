@@ -1,9 +1,9 @@
 <template>
 
-  <div v-if="formVisible" class="mt-5 container card bg-dark text-bg-dark"
+  <div v-if="formVisible" class="mt-5 container card"
        style="max-width: 18rem; min-width: 10rem; padding: 1rem;">
     <form>
-      <div class="form-outline card-header">
+      <div class="form card-header">
         <h5> Joining {{ room.room_name }}</h5>
       </div>
 
@@ -39,7 +39,7 @@
 
     </div>
 
-    <table class="table border-dark table-striped table-bordered">
+    <table class="table border-dark table-striped table-bordered shadow">
       <thead>
       <tr>
         <th></th>
@@ -48,13 +48,13 @@
         <th class="col-2">Due-Date</th>
         <th class="col-1">Estimation</th>
         <th class="text-center col-1">
-          <button class="btn btn-outline-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
-            <i class="bi bi-plus-square" @click="getAddableTasks"></i>
+          <button class="btn btn-danger" @click="removeFromRoom">
+            <i class="bi bi-dash-square"></i>
           </button>
         </th>
         <th class="text-center col-1">
-          <button class="btn btn-outline-danger" @click="removeFromRoom">
-            <i class="bi bi-dash-square"></i>
+          <button class="btn btn-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
+            <i class="bi bi-plus-square" @click="getAddableTasks"></i>
           </button>
         </th>
       </tr>
@@ -62,31 +62,33 @@
 
       <tbody>
       <tr v-for="task in tasks" :key="task.id">
-        <th><input id="{{task.id}}"
-                   v-model="removeIds"
-                   :value="task.id"
-                   class="form-check-input"
-                   type="checkbox"/></th>
+        <th class="text-center"><input
+            id="{{task.id}}"
+            v-model="removeIds"
+            :value="task.id"
+            class="form-check-input"
+            type="checkbox"
+        /></th>
         <th> {{ task.title }}</th>
         <th> {{ task.description }}</th>
         <th> {{ task.due }}</th>
         <th class="text-center"> {{ task.estimation }}</th>
         <th class="text-center">
-          <button class="btn btn-info"
+          <button class="btn btn-custom"
                   data-bs-target="#voteModal"
                   data-bs-toggle="modal"
                   type="button"
-                  v-bind:disabled="isVoted "
+                  :disabled="isVoted[task.id]"
                   @click="voteModel.taskId = task.id">
             <i class="bi bi-clipboard-check"/>
           </button>
         </th>
         <th class="text-center">
-          <button class="btn border-dark border-1"
+          <button class="btn btn-custom"
                   data-bs-target="#taskVoteModal"
                   data-bs-toggle="modal"
-                  type="button" @click="getVote(task.id)">
-            <i class="bi bi-radioactive"></i>
+                  type="button" @click="getVoteByTaskId(task.id)">
+            <i class="bi bi-info-square"></i>
           </button>
         </th>
       </tr>
@@ -98,13 +100,13 @@
   <!--  Add task Modal-->
   <div id="addTaskModal" class="modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content bg-dark">
+      <div class="modal-content ">
         <div class="modal-header">
-          <h5 class="modal-title text-white">Add Task</h5>
+          <h5 class="modal-title">Add Task</h5>
         </div>
         <div class="modal-body">
           <!--Add task Form-->
-          <table v-if="addableTasks.length>0" class="table table-dark table-striped table-bordered">
+          <table v-if="addableTasks.length>0" class="table table-striped table-bordered shadow">
             <thead>
             <tr>
               <th>Title</th>
@@ -143,18 +145,18 @@
 
   <div id="voteModal" class="modal modal-xl" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content bg-dark">
+      <div class="modal-content ">
         <div class="modal-header">
-          <h5 class="modal-title text-white">Vote Task</h5>
+          <h5 class="modal-title">Vote Task</h5>
         </div>
 
         <div class="modal-body">
           <!--Add Vote Form-->
           <div class="row row-cols-1 row-cols-md-5 g-2">
             <div v-for="card in cards" :key="card.id" class="col">
-              <div class="card bg bg-dark">
-                <div class="card-body btn btn-outline-light" @click="selectCard(card.id)">
-                  <img alt="." class="card-img-top" src="../../src/images/Mercury.png"/>
+              <div class="card flex-column shadow">
+                <div class="card-body btn btn-custom" @click="selectCard(card.id)">
+                  <h2 class="mb-0">{{card.id}}</h2>
                 </div>
               </div>
             </div>
@@ -165,7 +167,7 @@
         <div class=" modal-footer">
           <button class="btn btn-success" data-bs-dismiss="modal" type="button" @click="vote()">Ok
           </button>
-          <button class="btn btn-warning" data-bs-dismiss="modal" type="button">Cancel</button>
+          <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Cancel</button>
         </div>
       </div>
     </div>
@@ -173,14 +175,14 @@
 
   <div id="taskVoteModal" class="modal modal-xl" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="modal-content bg-dark">
+      <div class="modal-content ">
         <div class="modal-header">
-          <h5 class="modal-title text-white">Votes of Task</h5>
+          <h5 class="modal-title">Votes of Task</h5>
         </div>
 
         <div class="modal-body">
           <!--Add Vote Form-->
-          <table class="table table-striped table-dark text-bg-dark">
+          <table class="table table-striped">
             <thead>
             <tr>
               <th>User</th>
@@ -212,11 +214,11 @@ export default {
   name: "Room",
   data() {
     return {
-      isVoted: false,
       tasks: [],
       taskVotes: [],
       cards: [],
       addableTasks: [],
+      votedTasks:[],
       votes: '',
       voteModel: {
         username: '',
@@ -256,6 +258,7 @@ export default {
           this.formVisible = false;
           this.getTasks();
           this.voteModel.username = this.user.username;
+          this.getVoteByUsername()
         }
       } catch (error) {
         console.error("Error: " + error);
@@ -267,7 +270,7 @@ export default {
       });
     },
     async getAddableTasks() {
-      await service.getAddableTask().then((response) => {
+      await service.getAddableTasks().then((response) => {
         this.addableTasks = response.data;
       });
     },
@@ -303,19 +306,35 @@ export default {
     },
     vote() {
       service.vote(this.voteModel);
-      this.isVoted = true;
+      this.getVoteByTaskId(this.voteModel.taskId);
+      this.getVoteByUsername();
+      if(this.isVoteFull()){
+        service.estimateTask(this.voteModel.taskId);
+      }
+      this.getTasks();
     },
-    getVote(taskId) {
-      service.getVote(taskId).then((response) => {
+    getVoteByTaskId(taskId) {
+      service.getVoteByTaskId(taskId).then((response) => {
         this.taskVotes = response.data;
         this.votes = Object.keys(this.taskVotes).length;
       });
     },
-    isVoteFull() {
-      if (this.votes >= this.room.capacity) {
+    getVoteByUsername() {
+      service.getVoteByUsername(this.user.username).then((response) => {
+        this.votedTasks = response.data;
+      });
+    },
 
-      }
+    isVoteFull() {
+      console.log("deedde")
+      return this.votes >= this.room.capacity;
     }
+  },
+  computed:{
+    isVoted(taskId){
+      console.log("check");
+      return this.votedTasks.includes(taskId);
+    },
   },
   mounted() {
     this.id = this.$route.params.id;
@@ -323,7 +342,10 @@ export default {
     this.getCards();
   },
   unmounted() {
-    service.removeUser(this.id, this.user.username);
+    service.removeUserFromRoom(this.id, this.user.username);
   }
 }
 </script>
+<style scoped>
+
+</style>

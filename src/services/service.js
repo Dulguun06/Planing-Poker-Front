@@ -1,82 +1,91 @@
 import axios from 'axios';
-import {afterWrite} from "@popperjs/core";
 
-const TASK_API_BASE_URL = 'http://localhost:8080/api/task';
-const ROOM_API_BASE_URL = 'http://localhost:8080/api/room';
-const USER_API_BASE_URL = 'http://localhost:8080/api/user';
-const VOTE_API_BASE_URL = 'http://localhost:8080/api/vote';
+const API_BASE_URL = 'http://localhost:8080/api';
 
 class Service {
+    constructor() {
+        this.taskApi = `${API_BASE_URL}/task`;
+        this.roomApi = `${API_BASE_URL}/room`;
+        this.userApi = `${API_BASE_URL}/user`;
+        this.voteApi = `${API_BASE_URL}/vote`;
+    }
 
+    // Tasks Endpoints
     async getTasks() {
-        return axios.get(TASK_API_BASE_URL);
+        return await axios.get(this.taskApi);
     }
 
     async getTask(id) {
-        return axios.get(`${TASK_API_BASE_URL}/${id}`);
+        return await axios.get(`${this.taskApi}/${id}`);
     }
 
     async addTask(model) {
-        await axios.post(`${TASK_API_BASE_URL}`, model);
+        return await axios.post(this.taskApi, model);
     }
 
-    async addUser(roomId, user) {
-        await axios.post(`${USER_API_BASE_URL}`, user);
-        await axios.post(`${ROOM_API_BASE_URL}/${roomId}/users/${user.username}`)
+    async getAddableTasks() {
+        return await axios.get(`${this.taskApi}/noRoom`);
     }
 
+    async addToRoom(taskId, roomId) {
+        return await axios.put(`${this.taskApi}/addToRoom/${taskId}/${roomId}`);
+    }
+
+    async removeFromRoom(taskId) {
+        return await axios.put(`${this.taskApi}/removeFromRoom/${taskId}`);
+    }
+
+    async estimateTask(id) {
+        return await axios.put(`${this.taskApi}/estimate/${id}`);
+    }
+
+    // Rooms Endpoints
     async getRooms() {
-        return axios.get(ROOM_API_BASE_URL);
+        return await axios.get(this.roomApi);
     }
 
     async getRoom(id) {
-        return axios.get(`${ROOM_API_BASE_URL}/${id}`);
+        return await axios.get(`${this.roomApi}/${id}`);
     }
 
     async addRoom(model) {
-        await axios.post(`${ROOM_API_BASE_URL}`, model);
+        return await axios.post(this.roomApi, model);
     }
 
     async checkPass(id, password) {
-        try {
-            return await axios.post(`${ROOM_API_BASE_URL}/check-pass`, {
-                roomId: id, password: password,
-            });
-        } catch (error) {
-            console.error('Error checking password:', error);
-            throw error;
-        }
+        return await axios.post(`${this.roomApi}/check-pass`, { roomId: id, password });
     }
 
     async getTasksByRoomId(id) {
-        return await axios.get(`${ROOM_API_BASE_URL}/${id}/tasks`);
+        return await axios.get(`${this.roomApi}/${id}/tasks`);
     }
 
-    async getAddableTask() {
-        return await axios.get(`${TASK_API_BASE_URL}/noRoom`);
+    async removeUserFromRoom(roomId, username) {
+        return await axios.post(`${this.roomApi}/${roomId}/remove-user/${username}`);
     }
 
-    async addToRoom(id, roomId) {
-        return await axios.put(`${TASK_API_BASE_URL}/addToRoom/${id}/${roomId}`);
+    // Users Endpoints
+    async addUser(roomId, user) {
+        await axios.post(this.userApi, user);
+        await axios.post(`${this.roomApi}/${roomId}/users/${user.username}`);
     }
 
-    async removeFromRoom(id) {
-        return await axios.put(`${TASK_API_BASE_URL}/removeFromRoom/${id}`);
-    }
-
+    // Votes Endpoints
     async vote(model) {
-        console.log(model);
-        return await axios.post(`${VOTE_API_BASE_URL}`, model)
-    }
-    async getVote(taskId){
-        return await axios.get(`${VOTE_API_BASE_URL}/task/${taskId}`)
-    }
-    async getCards(){
-        return await axios.get("http://localhost:8080/api/card")
+        return await axios.post(this.voteApi, model);
     }
 
-    async removeUser(id, username) {
-        return await axios.post(`${ROOM_API_BASE_URL}/${id}/remove-user/${username}`)
+    async getVoteByTaskId(taskId) {
+        return await axios.get(`${this.voteApi}/task/${taskId}`);
+    }
+
+    async getVoteByUsername(username) {
+        return await axios.get(`${this.voteApi}/voted/${username}`);
+    }
+
+    // Other Endpoints
+    async getCards() {
+        return await axios.get(`${API_BASE_URL}/card`);
     }
 }
 

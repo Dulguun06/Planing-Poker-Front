@@ -3,16 +3,16 @@
 
     <h1 class="mb-4">Increase estimates accuracy</h1>
 
-    <div class="row bg-dark text-bg-dark rounded-5 d-flex flex-row">
-      <div class="col-6 align-self-center">
+    <div class="row text-bg-dark rounded-5 d-flex flex-row" style="background-color: #1f4e6a !important;">
+      <div class="col-6 align-self-center" style="padding-left: 3rem">
         <div class="row">
-          <h2>
+          <h2 class="mb-4">
             Vote and Estimate Issues in Real-Time
           </h2>
         </div>
         <div class="row">
           <p>
-            Our crisp and clean interface is not only easy-to-use, but also enables outstanding team engagement for
+            This crisp and clean interface is not only easy-to-use, but also enables outstanding team engagement for
             development project estimates.
           </p>
         </div>

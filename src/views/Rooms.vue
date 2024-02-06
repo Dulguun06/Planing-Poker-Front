@@ -3,17 +3,17 @@
     <header class="row">
       <h1 class="col"> Room List</h1>
     </header>
-    <table class="table border-black table-striped table-bordered">
+    <table class="table border-black table-striped table-bordered shadow">
       <thead>
       <tr>
         <th class="col-1 text-center">#</th>
         <th class="col-8">Room Name</th>
         <th class="ol-2">Capacity</th>
         <th class="col-1 text-center">
-          <button class="btn btn-outline-danger"><i class="bi bi-trash"></i></button>
+          <button class="btn btn-danger"><i class="bi bi-trash"></i></button>
         </th>
         <th class="col-1 text-center">
-          <button class="btn btn-outline-success" data-bs-target="#addRoomModal" data-bs-toggle="modal" type="button">
+          <button class="btn btn-success" data-bs-target="#addRoomModal" data-bs-toggle="modal" type="button">
             <i class="bi bi-house-add"></i>
           </button>
         </th>
@@ -28,15 +28,15 @@
           {{ room.joinedUsers }} / {{ room.capacity }}
         </th>
         <th class=" text-center" @click="getRoom(room.id)">
-          <button class="roomShowBtn btn btn-outline-warning" data-bs-target="#roomDetailModal" data-bs-toggle="modal">
+          <button class="roomShowBtn btn btn-custom" data-bs-target="#roomDetailModal" data-bs-toggle="modal">
             <i class=" bi bi-eye"></i>
           </button>
         </th>
 
         <th class="text-center">
-          <button class="btn btn-outline-primary roomShowBtn">
+          <button class="btn btn-custom roomShowBtn">
             <router-link :to="{ name: 'room', params: { id: room.id } }">
-              <i class="bi bi-door-open"/>
+              <i style="color: white !important" class="bi bi-door-open"/>
             </router-link>
           </button>
         </th>
@@ -47,17 +47,17 @@
 
   <div id="roomDetailModal" class="modal fade" tabindex="-1">
     <div class="  modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="bg-dark modal-content">
-        <div class="modal-header text-bg-dark">
+      <div class="bg-light modal-content">
+        <div class="modal-header text-bg-light">
           <h5 class="modal-title">Invite people to
             <em> {{ selectedRoom ? selectedRoom.room_name : "" }}</em>
           </h5>
         </div>
         <div class="modal-body row">
-          <label class="col-10 text-info align-self-center" type="url">{{
+          <label class="col-10 align-self-center" type="url">{{
               selectedRoom ? selectedRoom.url : ""
             }}</label>
-          <button class="col-2 btn btn-outline-light" @click="copy(selectedRoom.url)">
+          <button class="col-2 btn btn-light" @click="copy(selectedRoom.url)">
             <i class="bi bi-copy"></i>
           </button>
         </div>
@@ -70,7 +70,7 @@
 
   <div id="addRoomModal" class="modal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-      <div class="bg-dark text-bg-dark modal-content">
+      <div class="bg-light text-bg-light modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create Room</h5>
         </div>
@@ -162,6 +162,10 @@ export default {
 }
 </script>
 
-<style scoped>
+<style >
 /* Add any custom styles specific to the About component */
+.btn-custom{
+  background-color: #1f4e6a;
+  color: white;
+}
 </style>

@@ -4,14 +4,14 @@
       <h1 class="col"> Task List</h1>
     </header>
 
-    <table class="table border-black table-striped table-bordered">
+    <table class="table border-black table-striped table-bordered shadow">
       <thead>
       <tr>
         <th>Title</th>
         <th class="col-2">Due-Date</th>
         <th class="col-1">Estimation</th>
         <th class="text-center col-1">
-          <button class="btn btn-outline-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
+          <button class="btn btn-success" data-bs-target="#addTaskModal" data-bs-toggle="modal" type="button">
             <i class="bi bi-plus-square"></i>
           </button>
         </th>
@@ -25,7 +25,7 @@
         <th class="text-center"> {{ task.estimation }}</th>
         <th class="taskShowBtn text-center" data-bs-target="#taskModal" data-bs-toggle="modal"
             @click="getTask(task.id)">
-          <i class="bi bi-info-circle " style="font-size: 1rem;"></i>
+          <i class="bi bi-info-circle btn text-bg-dark" style="font-size: 1rem; background-color: #1f4e6a !important;"></i>
         </th>
       </tr>
       </tbody>
@@ -43,7 +43,6 @@
           <p>{{ selectedTask ? selectedTask.description : "" }}</p>
         </div>
         <div class="modal-footer">
-          <p>Created by: {{ selectedTask ? selectedTask.userName : "" }}</p>
           <p style="padding-right: 1rem">Estimation: {{ selectedTask ? selectedTask.estimation : 0 }}</p>
           <button class="btn btn-danger" data-bs-dismiss="modal" type="button">Close</button>
         </div>
@@ -100,7 +99,6 @@ export default {
       formData: {
         title: '',
         description: '',
-        username: 'john_doe',
         due: '',
         estimation: null,
         room_id: null

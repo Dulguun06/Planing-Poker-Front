@@ -26,7 +26,10 @@ export default {
 }
 
 body {
-  background-color: #f1faee !important;
+  background-color: #fefefe !important;
 }
-
+h1{
+  margin-bottom: 2rem;
+  color: #1f4e6a;
+}
 </style>
