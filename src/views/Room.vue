@@ -74,11 +74,11 @@
         <th> {{ task.due }}</th>
         <th class="text-center"> {{ task.estimation }}</th>
         <th class="text-center">
-          <button class="btn btn-custom"
+          <button :disabled="isVoted[task.id]"
+                  class="btn btn-custom"
                   data-bs-target="#voteModal"
                   data-bs-toggle="modal"
                   type="button"
-                  :disabled="isVoted[task.id]"
                   @click="voteModel.taskId = task.id">
             <i class="bi bi-clipboard-check"/>
           </button>
@@ -156,7 +156,7 @@
             <div v-for="card in cards" :key="card.id" class="col">
               <div class="card flex-column shadow">
                 <div class="card-body btn btn-custom" @click="selectCard(card.id)">
-                  <h2 class="mb-0">{{card.id}}</h2>
+                  <h2 class="mb-0">{{ card.id }}</h2>
                 </div>
               </div>
             </div>
@@ -218,7 +218,7 @@ export default {
       taskVotes: [],
       cards: [],
       addableTasks: [],
-      votedTasks:[],
+      votedTasks: [],
       votes: '',
       voteModel: {
         username: '',
@@ -256,23 +256,29 @@ export default {
           await service.addUser(this.id, this.user);
           this.isVisible = true;
           this.formVisible = false;
-          this.getTasks();
+          await this.getTasks();
           this.voteModel.username = this.user.username;
-          this.getVoteByUsername()
+          await this.getVoteByUsername();
         }
       } catch (error) {
         console.error("Error: " + error);
       }
     },
-    getTasks() {
-      service.getTasksByRoomId(this.room.id).then((response) => {
+    async getTasks() {
+      try {
+        const response = await service.getTasksByRoomId(this.room.id);
         this.tasks = response.data;
-      });
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+      }
     },
     async getAddableTasks() {
-      await service.getAddableTasks().then((response) => {
+      try {
+        const response = await service.getAddableTasks();
         this.addableTasks = response.data;
-      });
+      } catch (error) {
+        console.error('Error fetching addable tasks:', error);
+      }
     },
     async addToRoom() {
       try {
@@ -296,43 +302,54 @@ export default {
         console.error('Error removing from room: ', error);
       }
     },
-    getCards() {
-      service.getCards().then((response) => {
+    async getCards() {
+      try {
+        const response = await service.getCards();
         this.cards = response.data;
-      })
+      } catch (error) {
+        console.error('Error fetching cards:', error);
+      }
     },
-    selectCard(est) {
+    async selectCard(est) {
       this.voteModel.estimation = est;
     },
-    vote() {
-      service.vote(this.voteModel);
-      this.getVoteByTaskId(this.voteModel.taskId);
-      this.getVoteByUsername();
-      if(this.isVoteFull()){
-        service.estimateTask(this.voteModel.taskId);
+    async vote() {
+      try {
+        await service.vote(this.voteModel);
+        await this.getVoteByTaskId(this.voteModel.taskId);
+        await this.getVoteByUsername();
+        if (this.isVoteFull()) {
+          await service.estimateTask(this.voteModel.taskId);
+          await this.getTasks();
+        }
+      } catch (error) {
+        console.error('Error voting:', error);
       }
-      this.getTasks();
     },
-    getVoteByTaskId(taskId) {
-      service.getVoteByTaskId(taskId).then((response) => {
+    async getVoteByTaskId(taskId) {
+      try {
+        const response = await service.getVoteByTaskId(taskId);
         this.taskVotes = response.data;
         this.votes = Object.keys(this.taskVotes).length;
-      });
+      } catch (error) {
+        console.error('Error fetching votes by task ID:', error);
+      }
     },
-    getVoteByUsername() {
-      service.getVoteByUsername(this.user.username).then((response) => {
+    async getVoteByUsername() {
+      try {
+        const response = await service.getVoteByUsername(this.user.username);
         this.votedTasks = response.data;
-      });
+      } catch (error) {
+        console.error('Error fetching votes by username:', error);
+      }
     },
 
     isVoteFull() {
-      console.log("deedde")
       return this.votes >= this.room.capacity;
     }
   },
-  computed:{
-    isVoted(taskId){
-      console.log("check");
+  computed: {
+    isVoted(taskId) {
       return this.votedTasks.includes(taskId);
     },
   },

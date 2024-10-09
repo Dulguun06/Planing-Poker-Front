@@ -119,41 +119,37 @@ export default {
       },
       formData: {
         room_name: '',
-        url: '',
         password: '',
         capacity: '',
       },
     }
   },
   methods: {
-    getRooms() {
-      service.getRooms().then((response) => {
+    async getRooms() {
+      await service.getRooms().then((response) => {
         this.rooms = response.data;
       })
     },
-    getRoom(roomId) {
-      service.getRoom(roomId).then((response) => {
+    async getRoom(roomId) {
+      await service.getRoom(roomId).then((response) => {
         this.selectedRoom = response.data;
       });
     },
     async addRoom() {
       try {
         await service.addRoom(this.formData);
-        this.formData = {
-          room_name: '',
-          url: '',
-          password: '',
-          capacity: '',
-        };
-        this.getRooms();
       } catch (error) {
         console.error("Error adding room:", error);
       }
-      this.getRooms();
+      this.formData = {
+        room_name: '',
+        password: '',
+        capacity: '',
+      };
+      await this.getRooms();
     },
     copy(url) {
       navigator.clipboard.writeText(url);
-
     }
   },
   created() {

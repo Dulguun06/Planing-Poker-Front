@@ -25,7 +25,8 @@
         <th class="text-center"> {{ task.estimation }}</th>
         <th class="taskShowBtn text-center" data-bs-target="#taskModal" data-bs-toggle="modal"
             @click="getTask(task.id)">
-          <i class="bi bi-info-circle btn text-bg-dark" style="font-size: 1rem; background-color: #1f4e6a !important;"></i>
+          <i class="bi bi-info-circle btn text-bg-dark"
+             style="font-size: 1rem; background-color: #1f4e6a !important;"></i>
         </th>
       </tr>
       </tbody>
@@ -120,19 +121,15 @@ export default {
       try {
         await service.addTask(this.formData);
         console.log("formData: " + JSON.stringify(this.formData));
-        this.formData = {
-          title: '',
-          description: '',
-          userName: 'john_doe',
-          due: '',
-          estimation: null,
-          room_id: null
-        };
-        // Refresh the task list
-        this.getTasks();
       } catch (error) {
         console.error("Error adding task:", error);
       }
+      this.formData = {
+        title: '',
+        description: '',
+        due: '',
+      };
+      this.getTasks();
     }
   },
   created() {
